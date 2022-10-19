@@ -16,7 +16,7 @@ router = APIRouter()
 )
 async def create_user(
         data: UserRegister,
-        users: UsersCRUD = Depends(get_users_crud())
+        users: UsersCRUD = Depends(get_users_crud)
 ):
     user = await users.create(data=data)
 
@@ -31,7 +31,7 @@ async def create_user(
 async def patch_user(
         user_id: str,
         data: UserPatch,
-        users: UsersCRUD = Depends(get_users_crud())
+        users: UsersCRUD = Depends(get_users_crud)
 ):
     user = await users.patch(user_id=user_id, data=data)
 
