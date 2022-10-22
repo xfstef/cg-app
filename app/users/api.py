@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, HTTPException
 from fastapi import status as http_status
 
 from app import User
@@ -36,6 +36,12 @@ async def patch_user(
         users: UsersCRUD = Depends(get_users_crud),
         user: User = Depends(get_current_user)  # noqa
 ):
+    if user_id != str(user.uuid):
+        raise HTTPException(
+            status_code=http_status.HTTP_403_FORBIDDEN,
+            detail="Unauthorised attempt to modify the user!"
+        )
+
     user = await users.patch(user_id=user_id, data=data)
 
     return user
@@ -51,6 +57,12 @@ async def delete_user(
         users: UsersCRUD = Depends(get_users_crud),
         user: User = Depends(get_current_user)  # noqa
 ):
+    if user_id != str(user.uuid):
+        raise HTTPException(
+            status_code=http_status.HTTP_403_FORBIDDEN,
+            detail="Unauthorised attempt to modify the user!"
+        )
+
     deleted = await users.delete(user_id=user_id)
 
     return {"status": deleted, "message": "The user has been deleted!"}
