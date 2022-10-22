@@ -2,7 +2,6 @@ from typing import List, Optional
 
 from sqlmodel import Field, Relationship, SQLModel
 
-from app.posts.models import PublicPost
 from app.core.models import (TimestampModel, UUIDModel)
 
 prefix = "usr"
@@ -31,7 +30,7 @@ class User(
 ):
     __tablename__ = f"{prefix}_users"
 
-    posts: List[PublicPost] = Relationship(
+    posts: List["PublicPost"] = Relationship(
         back_populates="author",
         sa_relationship_kwargs={
             "lazy": "immediate",

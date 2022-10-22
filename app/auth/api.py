@@ -2,7 +2,8 @@ from fastapi import (APIRouter, Depends, HTTPException, status)
 from fastapi.security import OAuth2PasswordRequestForm
 from jose import jwt
 
-from app import settings
+from app import settings, User
+from app.auth.dependencies import get_current_user
 from app.auth.models import Token
 from app.auth.schemas import ResetPassword
 from app.core.models import StatusMessage
@@ -21,6 +22,12 @@ async def get_access_token(
 
     user = await users.find_by_username(username=form_data.username)
 
+    if not user:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="The user hasn't been found!"
+        )
+
     if not verify_password(form_data.password, user.hashed_password):
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
@@ -36,7 +43,8 @@ async def get_access_token(
 @router.post("/reset_password", response_model=StatusMessage)
 async def reset_password(
         data: ResetPassword,
-        users: UsersCRUD = Depends(get_users_crud)
+        users: UsersCRUD = Depends(get_users_crud),
+        user: User = Depends(get_current_user)  # noqa
 ):
     try:
         token_data = jwt.decode(

@@ -16,10 +16,11 @@ class UsersCRUD:
         self.session = session
 
     async def create(self, data: UserCreate, commit: bool = True) -> User:
-        exists = await self.find_by_username(username=data["username"])
+        exists = await self.find_by_username(username=data.username)
         if exists:
             raise HTTP403UsernameExists()
 
+        data.hashed_password = get_password_hash(password=data.hashed_password)
         user = User(**data.dict())
         self.session.add(user)
 
@@ -123,7 +124,7 @@ class UsersCRUD:
         return True
 
     async def delete(self, user_id: str) -> bool:
-        where_clause = [User.user_id == user_id]
+        where_clause = [User.uuid == user_id]
 
         statement = delete(
             User
@@ -137,8 +138,7 @@ class UsersCRUD:
 
     async def find_by_username(
             self,
-            username: str,
-            one_or_none: bool = False
+            username: str
     ) -> User:
         statement = select(
             User
@@ -148,11 +148,5 @@ class UsersCRUD:
 
         results = await self.session.execute(statement)
         user = results.scalars().one_or_none()
-
-        if user is None and not one_or_none:
-            raise HTTPException(
-                status_code=http_status.HTTP_404_NOT_FOUND,
-                detail="The user hasn't been found!"
-            )
 
         return user

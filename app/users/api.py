@@ -1,10 +1,12 @@
 from fastapi import APIRouter, Depends
 from fastapi import status as http_status
 
+from app import User
+from app.auth.dependencies import get_current_user
 from app.core.models import StatusMessage
 from app.users.crud import UsersCRUD
 from app.users.dependencies import get_users_crud
-from app.users.schemas import (UserPatch, UserRead, UserRegister)
+from app.users.schemas import (UserPatch, UserRead, UserCreate)
 
 router = APIRouter()
 
@@ -15,7 +17,7 @@ router = APIRouter()
     status_code=http_status.HTTP_201_CREATED
 )
 async def create_user(
-        data: UserRegister,
+        data: UserCreate,
         users: UsersCRUD = Depends(get_users_crud)
 ):
     user = await users.create(data=data)
@@ -31,7 +33,8 @@ async def create_user(
 async def patch_user(
         user_id: str,
         data: UserPatch,
-        users: UsersCRUD = Depends(get_users_crud)
+        users: UsersCRUD = Depends(get_users_crud),
+        user: User = Depends(get_current_user)  # noqa
 ):
     user = await users.patch(user_id=user_id, data=data)
 
@@ -45,7 +48,8 @@ async def patch_user(
 )
 async def delete_user(
         user_id: str,
-        users: UsersCRUD = Depends(get_users_crud)
+        users: UsersCRUD = Depends(get_users_crud),
+        user: User = Depends(get_current_user)  # noqa
 ):
     deleted = await users.delete(user_id=user_id)
 

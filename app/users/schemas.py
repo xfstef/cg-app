@@ -1,25 +1,16 @@
-from typing import Optional
+from typing import Optional, List
 from pydantic import root_validator
 
 from app.core.utils import password_validator
 from app.core.models import UUIDModel
 from app.users.models import UserBase
-
-
-class UserRegister(UserBase):
-    password_1: str
-    password_2: str
-
-    @root_validator()
-    def passwords(cls, values: dict):  # noqa: class method
-        values = password_validator(values=values)
-
-        return values
+from app import PublicPost
 
 
 class UserRead(UserBase, UUIDModel):
     username: str
     biography: Optional[str]
+    posts: Optional[List[PublicPost]]
 
 
 class UserCreate(UserBase):

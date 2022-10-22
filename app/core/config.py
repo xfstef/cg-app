@@ -11,3 +11,9 @@ class Settings(BaseSettings):
 
    # Database
    db_async_connection_str: str
+
+   # [Security]
+   auth_algorithm: str
+   auth_token_expire: int
+   auth_secret_key: str
+   email_secret_key: str

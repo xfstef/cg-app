@@ -33,9 +33,9 @@ class PublicPost(
     )
 
     author: "User" = Relationship(
-        sa_relationship=RelationshipProperty(
-            "User",
-            back_populates="posts",
-            uselist=False
-        )
+        back_populates="posts",
+        sa_relationship_kwargs={
+            "lazy": "noload",
+            "uselist": False
+        }
     )
