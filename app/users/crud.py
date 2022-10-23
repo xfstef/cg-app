@@ -71,39 +71,23 @@ class UsersCRUD:
 
         return user
 
-    async def _patch(
+    async def patch(
             self,
             user_id: str | UUID,
-            data: UserPatch,
-            commit: bool = True
+            data: UserPatch
     ) -> User:
         user = await self.get(user_id=user_id)
 
         values = data.dict(exclude_unset=True)
 
-        user.update_from_values(values=values)
+        for key, value in values.items():
+            setattr(user, key, value)
+
         self.session.add(user)
-
-        if commit:
-            await self.session.commit()
-        else:
-            await self.session.flush()
-
+        await self.session.commit()
         await self.session.refresh(user)
 
         return user
-
-    async def patch(
-            self,
-            user_id: str | UUID,
-            data: UserPatch,
-            commit: bool = True
-    ) -> User:
-        return await self._patch(
-            user_id=user_id,
-            data=data,
-            commit=commit
-        )
 
     async def patch_password(
             self,

@@ -25,6 +25,19 @@ async def create_user(
     return user
 
 
+@router.get(
+    "/self",
+    response_model=UserRead,
+    status_code=http_status.HTTP_200_OK
+)
+async def get_self(
+        users: UsersCRUD = Depends(get_users_crud),
+        user: User = Depends(get_current_user)
+):
+    user = await users.get(user_id=user.uuid)
+    return user
+
+
 @router.patch(
     "/{user_id}",
     response_model=UserRead,

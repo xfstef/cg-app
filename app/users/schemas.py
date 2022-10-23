@@ -7,7 +7,7 @@ from app.users.models import UserBase
 from app import PublicPost
 
 
-class UserRead(UserBase, UUIDModel):
+class UserRead(UUIDModel):
     username: str
     biography: Optional[str]
     posts: Optional[List[PublicPost]]
@@ -17,6 +17,6 @@ class UserCreate(UserBase):
     hashed_password: str
 
 
-class UserPatch(UserBase):
+class UserPatch(UUIDModel):
     username: str
     biography: Optional[str]
