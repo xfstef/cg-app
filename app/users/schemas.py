@@ -1,7 +1,5 @@
 from typing import Optional, List
-from pydantic import root_validator
 
-from app.core.utils import password_validator
 from app.core.models import UUIDModel
 from app.users.models import UserBase
 from app import PublicPost

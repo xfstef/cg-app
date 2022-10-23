@@ -152,6 +152,33 @@ class HTTP403UsernameExists(HTTP403):
         )
 
 
+class HTTP403PostTitleExists(HTTP403):
+    def __init__(self):
+        super().__init__(
+            title="Post exists!",
+            description="A Post with the same title already exists. "
+                        "Please try a different title!"
+        )
+
+
+class HTTP403SubscriptionExists(HTTP403):
+    def __init__(self):
+        super().__init__(
+            title="Subscription exists!",
+            description="A Subscription to the same author exists. "
+                        "Please try a different author!"
+        )
+
+
+class HTTP403SubscriptionsLimit(HTTP403):
+    def __init__(self):
+        super().__init__(
+            title="Subscription limit reached!!",
+            description="You have reached your 100 Subscriptions limit. "
+                        "Please remove some subscriptions first!"
+        )
+
+
 class HTTP404(HTTPException):
     def __init__(
             self,

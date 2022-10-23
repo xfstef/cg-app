@@ -1,6 +1,5 @@
 from uuid import UUID
 
-from sqlalchemy.orm import RelationshipProperty
 from sqlmodel import Field, Relationship
 
 from app.core.models import (TimestampModel, UUIDModel)
