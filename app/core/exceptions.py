@@ -170,6 +170,15 @@ class HTTP403SubscriptionExists(HTTP403):
         )
 
 
+class HTTP403SubscriptionDoesNotExist(HTTP403):
+    def __init__(self):
+        super().__init__(
+            title="Subscription does not exist!",
+            description="A Subscription to the same author does not exist. "
+                        "Please try a different author!"
+        )
+
+
 class HTTP403SubscriptionsLimit(HTTP403):
     def __init__(self):
         super().__init__(

@@ -3,8 +3,7 @@ from pydantic import BaseModel, root_validator
 from app.core.utils import password_validator
 
 
-class ResetPassword(BaseModel):
-    token: str
+class CreatePassword(BaseModel):
     password_1: str
     password_2: str
 
@@ -12,3 +11,7 @@ class ResetPassword(BaseModel):
     def passwords(cls, values: dict):  # noqa
         values = password_validator(values=values)
         return values
+
+
+class ResetPassword(CreatePassword):
+    token: str

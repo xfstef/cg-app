@@ -5,7 +5,8 @@ from fastapi import Depends
 from sqlalchemy import select, delete
 from sqlmodel.ext.asyncio.session import AsyncSession
 
-from app.core.exceptions import HTTP404, HTTP403SubscriptionExists, HTTP403SubscriptionsLimit, HTTP409
+from app.core.exceptions import HTTP404, HTTP403SubscriptionExists, \
+    HTTP403SubscriptionsLimit, HTTP409, HTTP403SubscriptionDoesNotExist
 from app.subscriptions.models import Subscription
 from app.users.crud import UsersCRUD
 
@@ -86,6 +87,11 @@ class SubscriptionsCRUD:
 
         if creator.uuid == user_id:
             raise HTTP409()
+
+        exists = await self.get(author_user_id=creator.uuid,
+                                subscriber_user_id=user_id)
+        if not exists:
+            raise HTTP403SubscriptionDoesNotExist()
 
         where_clause = [
             Subscription.author_user_id == creator.uuid,
