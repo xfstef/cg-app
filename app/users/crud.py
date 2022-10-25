@@ -20,7 +20,7 @@ class UsersCRUD:
         if exists:
             raise HTTP403UsernameExists()
 
-        data.hashed_password = get_password_hash(password=data.hashed_password)
+        data.hashed_password = get_password_hash(password=data.hashed_password.password_1)
         user = User(**data.dict())
         self.session.add(user)
 
